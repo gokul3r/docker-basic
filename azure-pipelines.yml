@@ -10,20 +10,6 @@ variables:
   BuildConfiguration: 'Release'
   DockerImageName: 'mlops1-349012/clouddemo'
 steps:
-- task: DotNetCoreCLI@2
-  displayName: Publish
-  inputs:
-    projects: 'applications/clouddemo/netcore/CloudDemo.MvcCore.sln'
-    publishWebProjects: false
-    command: publish
-    arguments: '--configuration $(BuildConfiguration) --framework=$(TargetFramework)'
-    zipAfterPublish: false
-    modifyOutputPath: false
-- task: CmdLine@1
-  displayName: 'Lock image version in deployment.yaml'
-  inputs:
-    filename: /bin/bash
-    arguments: '-c "awk ''{gsub(\"CLOUDDEMO_IMAGE\", \"gcr.io/$(DockerImageName):$(Build.BuildId)\", $0); print}'' applications/clouddemo/netcore/deployment.yaml > $(build.artifactstagingdirectory)/deployment.yaml"'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
